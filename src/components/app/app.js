@@ -1,5 +1,4 @@
 import React from 'react';
-import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
@@ -9,24 +8,24 @@ import CharDetails from '../charDetails';
 const App = () => {
     return (
         <> 
-            <Container>
+            <div className="container">
                 <Header />
-            </Container>
-            <Container>
-                <Row>
-                    <Col lg={{size: 5, offset: 0}}>
+            </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-5 col-offset-0">
                         <RandomChar/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md='6'>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
                         <ItemList />
-                    </Col>
-                    <Col md='6'>
+                    </div>
+                    <div className="col-md-6">
                         <CharDetails />
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };
