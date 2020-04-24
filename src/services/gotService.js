@@ -1,3 +1,5 @@
+
+
 export default class gotService {
 
   constructor() {
@@ -14,13 +16,48 @@ export default class gotService {
     return await res.json();
   }
 
-  _transformChar(char) {
+  _itemId = (item) => {
+    return item.url.match(/\d+/g)[0];
+  }
+
+  emptyData = (data) => {
+    if (data) {
+      return data;
+    } else {
+      return 'no data ((('
+    }
+  }
+
+  _transformChar(character) {
     return {
-      name: char.name,
-      gender: char.gender,
-      born: char.born,
-      died: char.died,
-      culture: char.culture
+      name: this.emptyData(character.name),
+      gender: this.emptyData(character.gender),
+      born: this.emptyData(character.born),
+      died: this.emptyData(character.died),
+      culture: this.emptyData(character.culture),
+      id: this._itemId(character)
+    }
+  }
+
+  _transformBook(book) {
+    return {
+      name: this.emptyData(book.name),
+      authors: this.emptyData(book.authors),
+      numberOfPages: this.emptyData(book.numberOfPages),
+      publisher: this.emptyData(book.publisher),
+      country: this.emptyData(book.country),
+      mediaType: this.emptyData(book.mediaType),
+      id: this._itemId(book)
+    }
+  }
+
+  _transformHouse(house) {
+    return {
+      name: this.emptyData(house.name),
+      region: this.emptyData(house.region),
+      coatOfArms: this.emptyData(house.coatOfArms),
+      words: this.emptyData(house.words),
+      id: this._itemId(house)
     }
   }
 
@@ -28,7 +65,7 @@ export default class gotService {
   getAllCharacters = async () => {
     const res = await this.getResource('/characters?page=5&pageSize=10');
 
-    return res.map(this._transformChar);
+    return res.map((item) => this._transformChar(item));
   }
 
   getCharacter = async (id) => {
@@ -37,19 +74,35 @@ export default class gotService {
     return this._transformChar(res);
   }
 
-  getAllBooks = () => {
-    return this.getResource('/books/');
+  getAllBooks = async () => {
+    const res = await this.getResource('/books/');
+
+    return res.map((item) => {
+      let element = this._transformBook(item);
+
+      return {...element, id: res.findIndex((el) => el === item) + 1}
+    });
   }
 
-  getBook = (id) => {
-    return this.getResource(`/books/${id}`);
+  getBook = async (id) => {
+    const res = await this.getResource(`/books/${id}`);
+
+    return this._transformBook(res);
   }
 
-  getAllHouses = () => {
-    return this.getResource('/houses/');
+  getAllHouses = async () => {
+    const res = await this.getResource('/houses/');
+
+    return res.map((item) => {
+      let element = this._transformHouse(item);
+
+      return {...element, id: res.findIndex((el) => el === item) + 1}
+    });
   }
 
-  getHouse = (id) => {
-    return this.getResource(`/houses/${id}`);
+  getHouse = async (id) => {
+    const res = await this.getResource(`/houses/${id}`);
+
+    return this._transformHouse(res);
   }
 }
